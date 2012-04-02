@@ -3,7 +3,7 @@
 
 Name:			%{name}
 Version:		0.1.4
-%define rel		1
+%define rel		1.1
 Release:		%mkrel %rel
 Summary:		interface of the packetstream thread-safe ring buffer
 License:		MIT-Style
