@@ -49,7 +49,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Apr 02 2012 Zombie Ryushu <ryushu@mandriva.org> 0.1.4-1.1mdv2012.0
+* Mon Apr 02 2012 Zombie Ryushu <ryushu@mandriva.org> 0.1.4-1.1
 + Revision: 788669
 - Be more clear what libs to package
 - Be more clear what libs to package
