@@ -1,16 +1,16 @@
-#
+#define debug_package	%{nil}
 %define name    libpacketstream 
+%define release		1.1
+%define develname %mklibname -d packetstream
 
 Name:			%{name}
 Version:		0.1.4
-%define rel		1.1
-Release:		%mkrel %rel
+Release:		%{release}
 Summary:		interface of the packetstream thread-safe ring buffer
-License:		MIT-Style
+License:		MIT
 Group:			System/Libraries
 URL:			https://github.com/ienorand/packetstream
-BuildRoot:      	%_tmppath/%{name}-%{version}-%{release}-buildroot
-Source0:		libpacketstream-0.1.4.tar.bz2
+Source0:		https://nodeload.github.com/ienorand/packetstream/tarball/libpacketstream-0.1.4.tar.bz2
 ExclusiveArch:		i586 x86_64
 BuildRequires:		cmake
 BuildRequires:		gcc gcc-c++ make
@@ -21,41 +21,38 @@ Interface of the 'packetstream' thread-safe ring buffer.
 
 %prep  
 %setup -q -n %{name}-%{version}
+rm -fr debian
 
 %build 
 cmake -D CMAKE_INSTALL_PREFIX=$RPM_BUILD_ROOT .
 %make
 
 %install 
-rm -rf $RPM_BUILD_ROOT
 %makeinstall
-mkdir $RPM_BUILD_ROOT/usr
-mv $RPM_BUILD_ROOT/include $RPM_BUILD_ROOT/usr/include
-%ifarch i586
-mv $RPM_BUILD_ROOT/lib $RPM_BUILD_ROOT/usr/lib
-%endif
-%ifarch x86_64
-mv $RPM_BUILD_ROOT/lib $RPM_BUILD_ROOT/usr/lib64
-%endif 
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+install -d  $RPM_BUILD_ROOT%{_libdir}
+install -d  $RPM_BUILD_ROOT%{_includedir}
+mv $RPM_BUILD_ROOT/include/*.h $RPM_BUILD_ROOT%{_includedir}
+mv $RPM_BUILD_ROOT/lib/* $RPM_BUILD_ROOT%{_libdir}
+rm -fr $RPM_BUILD_ROOT/include
+rm -fr $RPM_BUILD_ROOT/lib
 
 %files -n %{name}
 %defattr(0755,root,root)
-%{_libdir}/libpacketstream*
+%{_libdir}/libpacketstream.so*
+
+#----------
+%package -n %{develname}
+Summary: Development files for %{name}
+Provides: %{name}-devel = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}
+
+%description -n %{develname}
+The %{name}-devel package contains libraries and header files for
+developing applications that use %{name}
+
+%files -n %{develname}
 %{_includedir}/*
 
 
 
-%changelog
-* Mon Apr 02 2012 Zombie Ryushu <ryushu@mandriva.org> 0.1.4-1.1
-+ Revision: 788669
-- Be more clear what libs to package
-- Be more clear what libs to package
-- imported package libpacketstream
-
-
-* Mon Apr 2 2012 codebase7 <codebase7@yahoo.com> - 0.1.4-1.mga1
-- initial specfile 
 
