@@ -1,58 +1,58 @@
-#define debug_package	%{nil}
-%define name    libpacketstream 
-%define release		1.1
-%define develname %mklibname -d packetstream
+%define major 0
+%define libname %mklibname packetstream %{major}
+%define devname %mklibname packetstream -d
 
-Name:			%{name}
-Version:		0.1.4
-Release:		%{release}
-Summary:		interface of the packetstream thread-safe ring buffer
-License:		MIT
-Group:			System/Libraries
-URL:			https://github.com/ienorand/packetstream
-Source0:		https://nodeload.github.com/ienorand/packetstream/tarball/libpacketstream-0.1.4.tar.bz2
-ExclusiveArch:		i586 x86_64
-BuildRequires:		cmake
-BuildRequires:		gcc gcc-c++ make
+Summary:	Interface of the packetstream thread-safe ring buffer
+Name:		libpacketstream
+Version:	0.1.4
+Release:	2
+License:	MIT
+Group:		System/Libraries
+Url:		https://github.com/ienorand/packetstream
+Source0:	https://nodeload.github.com/ienorand/packetstream/tarball/%{name}-%{version}.tar.bz2
+BuildRequires:	cmake
 
-
-%description	
+%description
 Interface of the 'packetstream' thread-safe ring buffer.
 
-%prep  
-%setup -q -n %{name}-%{version}
-rm -fr debian
+#----------------------------------------------------------------------------
 
-%build 
-cmake -D CMAKE_INSTALL_PREFIX=$RPM_BUILD_ROOT .
-%make
+%package -n %{libname}
+Summary:	Shared library for %{name}
+Conflicts:	%{name} < 0.1.4-2
+Obsoletes:	%{name} < 0.1.4-2
 
-%install 
-%makeinstall
-install -d  $RPM_BUILD_ROOT%{_libdir}
-install -d  $RPM_BUILD_ROOT%{_includedir}
-mv $RPM_BUILD_ROOT/include/*.h $RPM_BUILD_ROOT%{_includedir}
-mv $RPM_BUILD_ROOT/lib/* $RPM_BUILD_ROOT%{_libdir}
-rm -fr $RPM_BUILD_ROOT/include
-rm -fr $RPM_BUILD_ROOT/lib
+%description -n %{libname}
+Shared library for %{name}.
 
-%files -n %{name}
-%defattr(0755,root,root)
-%{_libdir}/libpacketstream.so*
+%files -n %{libname}
+%{_libdir}/libpacketstream.so.%{major}*
 
-#----------
-%package -n %{develname}
-Summary: Development files for %{name}
-Provides: %{name}-devel = %{version}-%{release}
-Requires: %{name} = %{version}-%{release}
+#----------------------------------------------------------------------------
 
-%description -n %{develname}
+%package -n %{devname}
+Summary:	Development files for %{name}
+Requires:	%{libname} = %{EVRD}
+Provides:	%{name}-devel = %{EVRD}
+Conflicts:	%{name} < 0.1.4-2
+
+%description -n %{devname}
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}
 
-%files -n %{develname}
+%files -n %{devname}
+%{_libdir}/libpacketstream.so
 %{_includedir}/*
 
+#----------------------------------------------------------------------------
 
+%prep
+%setup -q
+rm -fr debian
 
+%build
+%cmake -DMLIBDIR=%{_lib}
+%make
 
+%install
+%makeinstall_std -C build
