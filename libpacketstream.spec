@@ -5,7 +5,7 @@
 Summary:	Interface of the packetstream thread-safe ring buffer
 Name:		libpacketstream
 Version:	0.1.4
-Release:	2
+Release:	3
 License:	MIT
 Group:		System/Libraries
 Url:		https://github.com/ienorand/packetstream
